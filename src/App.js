@@ -63,13 +63,15 @@ function App(){
   //일반함수
   const convert = () => console.log("단위를 min에서 hours로 변경합니다")
   const [amount, setAmont] = useState("0")
+  const [disabled, setDisabled]=useState(false);  // 입력폼의 disabled 상태와 연결(=데이터바인딩)
 
   function onChange(e){
     setAmont(e.target.value);
   }
-  
-  const resetInput = () => setAmont("0")
+  // 화살표 함수
+  const resetInput = () => {setAmont("0"); setDisabled(false);}
   const handleSubmit = (e) => e.preventDefault();
+  const inversion = () => setDisabled((current)=>(!current));  // current : state 의 이전값을 알아서  가져오는 파라미터 명(=작명은 알아서..)
 
   return(
     <div class="main">
@@ -81,9 +83,11 @@ function App(){
         <div className="converter">
           <form onSubmit={handleSubmit}>
             <ul>
-              <li><input type="text" value={amount} onChange={onChange} placeholder="값을 입력하세요"/>minutes</li>
-              <li><input type="text" value={amount / 60} placeholder="값을 입력하세요"/>hours</li>
-              <li><button onClick={resetInput}>리셋</button></li>
+              <li><input type="text" value={disabled ? amount*60 : amount} onChange={onChange} placeholder="값을 입력하세요" disabled={disabled}/>minutes</li>
+              <li><input type="text" value={!disabled ? amount/60 : amount} onChange={onChange} placeholder="값을 입력하세요" disabled={!disabled}/>hours</li>
+              <li><button onClick={resetInput}>리셋</button>
+              <button onClick={inversion}>반전</button>
+              </li>
             </ul>
           </form>
         </div>
